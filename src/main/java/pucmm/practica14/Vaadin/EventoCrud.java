@@ -70,6 +70,8 @@ public class EventoCrud extends VerticalLayout {
                     //Enviando el flujo
                     return eventoService.eventosPaginados(offset, limit).stream();
                     //return eventoService.buscarTodosEventos().stream();
+
+                   // return  eventoService.findAllByFecha(fecha).stream();
                 },
                 query -> {
                     //Indicando la cantidad maxima de elementos.
