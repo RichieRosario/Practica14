@@ -1,9 +1,12 @@
 package pucmm.practica14.Vaadin;
 
+import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -12,9 +15,13 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.NativeButtonRenderer;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.vaadin.server.VaadinSession;
 import javafx.scene.control.PasswordField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,20 +30,22 @@ import pucmm.practica14.model.Usuario;
 import pucmm.practica14.service.RolServiceImpl;
 import pucmm.practica14.service.UsuarioServiceImpl;
 
+import javax.servlet.http.Cookie;
 import java.util.ArrayList;
 import java.util.List;
 
 @Route("usuarios")
-@Component
 @UIScope
 public class UsuarioCrud extends VerticalLayout {
 
+    @Autowired
     UsuarioServiceImpl usuarioService;
+    @Autowired
     RolServiceImpl rolService;
 
     Grid<Usuario> tablaUsuarios;
     TextField tfUserName;
-    PasswordField tfPassword;
+    TextField tfPassword;
     TextField tfEmail;
     TextField tfNombre;
     ComboBox<String> cbRoles;
@@ -48,14 +57,14 @@ public class UsuarioCrud extends VerticalLayout {
     DataProvider<Usuario, Void> dataProvider;
 
     Usuario usuarioSeleccionado;
-    /**
-     * Constructor aplicando la inyección de dependecia
-     * @param usuarioService
-     */
+
+
+
+
 
     public UsuarioCrud(@Autowired UsuarioServiceImpl usuarioService, @Autowired RolServiceImpl rolService){
 
-        this.usuarioService = usuarioService;
+      this.usuarioService = usuarioService;
         this.rolService = rolService;
 
         crearRutas();
@@ -89,7 +98,7 @@ public class UsuarioCrud extends VerticalLayout {
         tablaUsuarios.addColumn(Usuario::getNombre).setHeader("Nombre");
         tablaUsuarios.addColumn(Usuario::getEmail).setHeader("Correo");
         tablaUsuarios.addColumn(Usuario::getNombreRol).setHeader("Rol");
-        tablaUsuarios.addColumn(new NativeButtonRenderer<Usuario>("Elminiar", e->{
+        tablaUsuarios.addColumn(new NativeButtonRenderer<Usuario>("Eliminar", e->{
             Notification.show("Eliminando el usuario: "+e.getId());
             usuarioService.borrarUsuarioPorId(e.getId());
             dataProvider.refreshAll();
@@ -200,15 +209,47 @@ public class UsuarioCrud extends VerticalLayout {
         setSizeFull();
         //refrescando la tabla.
         dataProvider.refreshAll();
+        Cookie c = getCookieByName("user");
+        if (c == null) {
+            UI.getCurrent().navigate("login");
+        } else if(usuarioService.findByUsername(c.getValue()).getNombreRol().equals("GERENTE")){
+            UI.getCurrent().navigate("calendario");
+        }
+
     }
+
     private void crearRutas(){
         HorizontalLayout caja = new HorizontalLayout();
         //con RouterLink el renderizado no recarga la pagina.
         caja.add(new RouterLink("Calendario", Calendario.class));
         caja.add(new RouterLink("Eventos", EventoCrud.class));
-        caja.add(new RouterLink("Usuarios", UsuarioCrud.class));
-        caja.add(new RouterLink("Roles", RolCrud.class));
+
+        if(getCookieByName("user").getValue().equals("admin")) {
+            caja.add(new RouterLink("Usuarios", UsuarioCrud.class));
+            caja.add(new RouterLink("Roles", RolCrud.class));
+        }
+
+        caja.add(new RouterLink("Configuración", Configuracion.class));
+        caja.add(new RouterLink("Cerrar sesión", Logout.class));
+
+        caja.add(new Label("Bienvenido, "+getCookieByName("user").getValue()));
 
         add(caja);
+    }
+
+
+
+    private Cookie getCookieByName(String name) {
+        // Fetch all cookies from the request
+        Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
+
+        // Iterate to find cookie by its name
+        for (Cookie cookie : cookies) {
+            if (name.equals(cookie.getName())) {
+                return cookie;
+            }
+        }
+
+        return null;
     }
 }

@@ -2,10 +2,8 @@ package pucmm.practica14.service;
 
 import pucmm.practica14.model.Evento;
 import pucmm.practica14.model.Usuario;
-import pucmm.practica14.repository.EventoRepository;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 public interface EventoService {
@@ -27,7 +25,4 @@ public interface EventoService {
     void enviarCorreo(String para, String asunto, String texto);
 
     List<Evento> eventosPaginados(int offset, int limit);
-
-    long count();
-
 }

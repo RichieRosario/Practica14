@@ -68,9 +68,5 @@ public class EventoServiceImpl implements EventoService {
     public List<Evento> eventosPaginados(int offset, int limit){
         return eventoRepository.eventosPaginados(offset, limit);
     }
-
-    public long count(){
-        return eventoRepository.count();
-    }
 }
 
