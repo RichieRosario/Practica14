@@ -99,12 +99,13 @@ public class EventoCrud extends VerticalLayout {
             if(s.getFirstSelectedItem().isPresent()){
                 eventoSeleccionado= s.getFirstSelectedItem().get();
                 binder.readBean(eventoSeleccionado);
+                btnEditar.setEnabled(true);
                 btnEliminar.setEnabled(true);
             }else{
                 tfTitulo.clear();
                 tfDescripcion.clear();
                 fecha.clear();
-
+                btnEditar.setEnabled(false);
                 btnEliminar.setEnabled(false);
             }
         });
@@ -136,7 +137,17 @@ public class EventoCrud extends VerticalLayout {
 
         tfTitulo.clear();
         tfDescripcion.clear();
-        fecha.clear();  
+        fecha.clear();
+
+
+        btnEditar = new Button("Editar", e->{
+            eventoSeleccionado.setTitulo(tfTitulo.getValue());
+            eventoSeleccionado.setDescripcion(tfDescripcion.getValue());
+            eventoSeleccionado.setFecha(fecha.getValue());
+            eventoService.actualizarEvento(eventoSeleccionado);
+            dataProvider.refreshAll();
+        });
+        btnEditar.setEnabled(false);
 
         btnEliminar = new Button("Eliminar", e->{
             eventoService.borrarEventoPorId(eventoSeleccionado.getId());
@@ -162,7 +173,7 @@ public class EventoCrud extends VerticalLayout {
         fl.add(tfDescripcion);
         fl.add(fecha);
 
-        HorizontalLayout accionesForm = new HorizontalLayout(btnAgregar, btnEliminar);
+        HorizontalLayout accionesForm = new HorizontalLayout(btnAgregar,btnEditar, btnEliminar);
         VerticalLayout vfl = new VerticalLayout(fl, accionesForm);
 
         //agregando el diseño.

@@ -88,9 +88,11 @@ public class RolCrud extends VerticalLayout {
             if(s.getFirstSelectedItem().isPresent()){
                 rolSeleccionado = s.getFirstSelectedItem().get();
                 binder.readBean(rolSeleccionado);
+                btnEditar.setEnabled(true);
                 btnEliminar.setEnabled(true);
             }else{
                 tfNombreRol.clear();
+                btnEditar.setEnabled(false);
                 btnEliminar.setEnabled(false);
             }
         });
@@ -116,6 +118,14 @@ public class RolCrud extends VerticalLayout {
         });
 
       tfNombreRol.clear();
+
+        btnEditar = new Button("Editar", e->{
+            rolSeleccionado.setNombreRol(tfNombreRol.getValue());
+            rolService.actualizarRol(rolSeleccionado);
+            dataProvider.refreshAll();
+        });
+        btnEditar.setEnabled(false);
+
         btnEliminar = new Button("Eliminar", e->{
             rolService.borrarRolPorId(rolSeleccionado.getId());
             dataProvider.refreshAll();
@@ -132,7 +142,7 @@ public class RolCrud extends VerticalLayout {
         FormLayout fl = new FormLayout();
         fl.add(tfNombreRol);
 
-        HorizontalLayout accionesForm = new HorizontalLayout(btnAgregar, btnEliminar);
+        HorizontalLayout accionesForm = new HorizontalLayout(btnAgregar, btnEditar, btnEliminar);
         VerticalLayout vfl = new VerticalLayout(fl, accionesForm);
 
         //agregando el diseño.
