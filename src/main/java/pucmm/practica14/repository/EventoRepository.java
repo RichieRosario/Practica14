@@ -14,4 +14,5 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
     @Query(value = "SELECT * FROM evento m offset(?1) limit(?2)", nativeQuery = true)
     List<Evento> eventosPaginados(int offset, int limit);
 
+    long count();
 }

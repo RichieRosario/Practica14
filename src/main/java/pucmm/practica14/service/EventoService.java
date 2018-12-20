@@ -25,4 +25,6 @@ public interface EventoService {
     void enviarCorreo(String para, String asunto, String texto);
 
     List<Evento> eventosPaginados(int offset, int limit);
+
+    long count();
 }

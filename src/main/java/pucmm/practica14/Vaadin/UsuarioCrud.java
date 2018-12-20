@@ -100,13 +100,14 @@ public class UsuarioCrud extends VerticalLayout {
             if(s.getFirstSelectedItem().isPresent()){
                 usuarioSeleccionado = s.getFirstSelectedItem().get();
                 binder.readBean(usuarioSeleccionado);
+                btnEditar.setEnabled(true);
                 btnEliminar.setEnabled(true);
             }else{
                 tfUserName.clear();
                 tfEmail.clear();
                 tfNombre.clear();
             //    tfPassword.clear();
-
+                btnEditar.setEnabled(false);
                 btnEliminar.setEnabled(false);
             }
         });
@@ -144,9 +145,23 @@ public class UsuarioCrud extends VerticalLayout {
 
         });
 
+
+
         tfUserName.clear();
         tfEmail.clear();
         tfNombre.clear();
+
+
+        btnEditar = new Button("Editar", e->{
+            usuarioSeleccionado.setUsername(tfUserName.getValue());
+            usuarioSeleccionado.setEmail(tfEmail.getValue());
+            usuarioSeleccionado.setNombre(tfNombre.getValue());
+            usuarioSeleccionado.setRol(rolService.findByNombreRol(cbRoles.getValue()));
+            usuarioService.actualizarUsuario(usuarioSeleccionado);
+            dataProvider.refreshAll();
+        });
+        btnEditar.setEnabled(false);
+
 
         btnEliminar = new Button("Eliminar", e->{
             usuarioService.borrarUsuarioPorId(usuarioSeleccionado.getId());
@@ -172,7 +187,7 @@ public class UsuarioCrud extends VerticalLayout {
         fl.add(tfNombre);
         fl.add(tfEmail);
         fl.add(cbRoles);
-        HorizontalLayout accionesForm = new HorizontalLayout(btnAgregar, btnEliminar);
+        HorizontalLayout accionesForm = new HorizontalLayout(btnAgregar,btnEditar, btnEliminar);
         VerticalLayout vfl = new VerticalLayout(fl, accionesForm);
 
         //agregando el diseño.

@@ -23,6 +23,8 @@ import pucmm.practica14.model.Usuario;
 import pucmm.practica14.service.EventoServiceImpl;
 import pucmm.practica14.service.UsuarioServiceImpl;
 
+import java.awt.print.Pageable;
+
 
 @Route("eventos")
 @Component
@@ -73,7 +75,7 @@ public class EventoCrud extends VerticalLayout {
                 },
                 query -> {
                     //Indicando la cantidad maxima de elementos.
-                    return Math.toIntExact(eventoService.eventosPaginados(0, 5).size());
+                    return Math.toIntExact(eventoService.count());
                 }
         );
 
@@ -118,13 +120,11 @@ public class EventoCrud extends VerticalLayout {
                 binder.writeBean(tempEvento);
                 eventoService.crearEvento(tempEvento);
                 for (Usuario usuario : usuarioService.buscarTodosUsuarios()){
-
                     eventoService.enviarCorreo(usuario.getEmail(), tempEvento.getTitulo(), tempEvento.getDescripcion());
                 }
                 //refrescando el data set.
                 dataProvider.refreshItem(tempEvento);
                 dataProvider.refreshAll();
-
 
             }catch (ValidationException ex){
                 Notification.show("Error...: "+ex.getMessage());
@@ -134,7 +134,7 @@ public class EventoCrud extends VerticalLayout {
 
         tfTitulo.clear();
         tfDescripcion.clear();
-        fecha.clear();
+        fecha.clear();  
 
         btnEliminar = new Button("Eliminar", e->{
             eventoService.borrarEventoPorId(eventoSeleccionado.getId());
