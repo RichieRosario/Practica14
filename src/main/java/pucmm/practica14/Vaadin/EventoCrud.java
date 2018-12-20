@@ -1,10 +1,12 @@
 package pucmm.practica14.Vaadin;
 
 import ch.qos.logback.core.boolex.EventEvaluatorBase;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -13,9 +15,13 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.NativeButtonRenderer;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.vaadin.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pucmm.practica14.model.Evento;
@@ -23,11 +29,12 @@ import pucmm.practica14.model.Usuario;
 import pucmm.practica14.service.EventoServiceImpl;
 import pucmm.practica14.service.UsuarioServiceImpl;
 
+import javax.servlet.http.Cookie;
+
 
 @Route("eventos")
-@Component
 @UIScope
-public class EventoCrud extends VerticalLayout {
+public class EventoCrud extends VerticalLayout  {
 
     EventoServiceImpl eventoService;
     UsuarioServiceImpl usuarioService;
@@ -54,6 +61,11 @@ public class EventoCrud extends VerticalLayout {
 
         this.eventoService = eventoService;
         this.usuarioService = usuarioService;
+
+
+
+
+
         crearRutas();
 
         //Instanciando el dato provider.
@@ -84,7 +96,7 @@ public class EventoCrud extends VerticalLayout {
         tablaEventos.addColumn(Evento::getTitulo).setHeader("Titulo");
         tablaEventos.addColumn(Evento::getDescripcion).setHeader("Descripcion");
         tablaEventos.addColumn(Evento::getFecha).setHeader("Fecha");
-        tablaEventos.addColumn(new NativeButtonRenderer<Evento>("Elminiar", e->{
+        tablaEventos.addColumn(new NativeButtonRenderer<Evento>("Eliminar", e->{
             Notification.show("Eliminando el evento: "+e.getId());
             eventoService.borrarEventoPorId(e.getId());
             dataProvider.refreshAll();
@@ -173,16 +185,46 @@ public class EventoCrud extends VerticalLayout {
         setSizeFull();
         //refrescando la tabla.
         dataProvider.refreshAll();
+
+        if(getCookieByName("user")==null){
+            UI.getCurrent().navigate("login");
+        }
     }
+
+
 
     private void crearRutas(){
         HorizontalLayout caja = new HorizontalLayout();
         //con RouterLink el renderizado no recarga la pagina.
         caja.add(new RouterLink("Calendario", Calendario.class));
         caja.add(new RouterLink("Eventos", EventoCrud.class));
-        caja.add(new RouterLink("Usuarios", UsuarioCrud.class));
-        caja.add(new RouterLink("Roles", RolCrud.class));
+
+        if(getCookieByName("user").getValue().equals("admin")) {
+            caja.add(new RouterLink("Usuarios", UsuarioCrud.class));
+            caja.add(new RouterLink("Roles", RolCrud.class));
+        }
+
+        caja.add(new RouterLink("Configuración", Configuracion.class));
+        caja.add(new RouterLink("Cerrar sesión", Logout.class));
+
+        caja.add(new Label("Bienvenido, "+getCookieByName("user").getValue()));
 
         add(caja);
+    }
+
+
+
+    private Cookie getCookieByName(String name) {
+        // Fetch all cookies from the request
+        Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
+
+        // Iterate to find cookie by its name
+        for (Cookie cookie : cookies) {
+            if (name.equals(cookie.getName())) {
+                return cookie;
+            }
+        }
+
+        return null;
     }
 }

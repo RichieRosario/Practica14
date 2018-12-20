@@ -22,6 +22,7 @@ import pucmm.practica14.Vaadin.EventoCrud;
 import pucmm.practica14.Vaadin.RolCrud;
 import pucmm.practica14.Vaadin.UsuarioCrud;
 import pucmm.practica14.service.UsuarioService;
+import pucmm.practica14.service.UsuarioServiceImpl;
 
 import javax.annotation.PostConstruct;
 

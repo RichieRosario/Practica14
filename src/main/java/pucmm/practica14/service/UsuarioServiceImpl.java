@@ -29,7 +29,8 @@ public class UsuarioServiceImpl implements UsuarioService {
         Usuario user = usuarioRepository.findByUsername(username);
         boolean flag = false;
         if(user != null){
-        if(user.getPassword() == password){
+
+        if(user.getPassword().equals( password)){
                 flag= true;
         }}
         return flag;
