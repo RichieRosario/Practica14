@@ -13,6 +13,7 @@ import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.NativeButtonRenderer;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,6 +47,9 @@ public class RolCrud extends VerticalLayout {
     public RolCrud(@Autowired RolServiceImpl rolService){
 
         this.rolService = rolService;
+        crearRutas();
+
+
 
         //Instanciando el dato provider.
         dataProvider = DataProvider.fromCallbacks(
@@ -84,9 +88,11 @@ public class RolCrud extends VerticalLayout {
             if(s.getFirstSelectedItem().isPresent()){
                 rolSeleccionado = s.getFirstSelectedItem().get();
                 binder.readBean(rolSeleccionado);
+                btnEditar.setEnabled(true);
                 btnEliminar.setEnabled(true);
             }else{
                 tfNombreRol.clear();
+                btnEditar.setEnabled(false);
                 btnEliminar.setEnabled(false);
             }
         });
@@ -112,6 +118,14 @@ public class RolCrud extends VerticalLayout {
         });
 
       tfNombreRol.clear();
+
+        btnEditar = new Button("Editar", e->{
+            rolSeleccionado.setNombreRol(tfNombreRol.getValue());
+            rolService.actualizarRol(rolSeleccionado);
+            dataProvider.refreshAll();
+        });
+        btnEditar.setEnabled(false);
+
         btnEliminar = new Button("Eliminar", e->{
             rolService.borrarRolPorId(rolSeleccionado.getId());
             dataProvider.refreshAll();
@@ -128,7 +142,7 @@ public class RolCrud extends VerticalLayout {
         FormLayout fl = new FormLayout();
         fl.add(tfNombreRol);
 
-        HorizontalLayout accionesForm = new HorizontalLayout(btnAgregar, btnEliminar);
+        HorizontalLayout accionesForm = new HorizontalLayout(btnAgregar, btnEditar, btnEliminar);
         VerticalLayout vfl = new VerticalLayout(fl, accionesForm);
 
         //agregando el diseño.
@@ -141,5 +155,15 @@ public class RolCrud extends VerticalLayout {
         setSizeFull();
         //refrescando la tabla.
         dataProvider.refreshAll();
+    }
+    private void crearRutas(){
+        HorizontalLayout caja = new HorizontalLayout();
+        //con RouterLink el renderizado no recarga la pagina.
+        caja.add(new RouterLink("Calendario", Calendario.class));
+        caja.add(new RouterLink("Eventos", EventoCrud.class));
+        caja.add(new RouterLink("Usuarios", UsuarioCrud.class));
+        caja.add(new RouterLink("Roles", RolCrud.class));
+
+        add(caja);
     }
 }

@@ -23,6 +23,7 @@
     <orderEntry type="library" name="Gradle: com.vaadin:vaadin-spring-boot-starter:10.0.7" level="project" />
     <orderEntry type="library" name="Gradle: org.vaadin.blackbluegl:calendar-component:2.0-BETA4" level="project" />
     <orderEntry type="library" name="Gradle: org.vaadin.onur:calendar-component:1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.vaadin.stefan:fullcalendar:1.7.1" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-web:2.0.5.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-json:2.0.5.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.4.0" level="project" />

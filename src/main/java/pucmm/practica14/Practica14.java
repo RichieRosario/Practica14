@@ -10,6 +10,8 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,55 +30,6 @@ public class Practica14  {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Practica14.class, args);
-	}
-
-	@Route("")
-	public static class MiView extends VerticalLayout {
-
-
-
-		public MiView(){
-//			add(new Button("Presionar", new ComponentEventListener<ClickEvent<Button>>() {
-//				@Override
-//				public void onComponentEvent(ClickEvent<Button> event) {
-//					Notification.show("Presioando el botón....");
-//				}
-//			}));
-
-			//creando rutas.
-			crearRutas();
-		}
-
-		/**
-		 * Creando la creación de las rutas.
-		 */
-		private void crearRutas(){
-			VerticalLayout caja = new VerticalLayout();
-			caja.add(new H2("Enlaces a funcionalidades:"));
-			//con RouterLink el renderizado no recarga la pagina.
-//			caja.add(new RouterLink("Hola Mundo", HolaMundoVaadin.class));
-//			caja.add(new RouterLink("Indice de URL parametros",ConocerURL.class));
-//			caja.add(new RouterLink("Ejemplo de Grid", EjemploGrid.class));
-//			caja.add(new RouterLink("Ejemplo de Binder", EjemploBinder.class));
-            caja.add(new RouterLink("Calendario", Calendario.class));
-			caja.add(new RouterLink("Eventos", EventoCrud.class));
-			caja.add(new RouterLink("Usuarios", UsuarioCrud.class));
-			caja.add(new RouterLink("Roles", RolCrud.class));
-
-			add(caja);
-		}
-	}
-
-	@Component
-	static class BootStrap{
-		@Autowired
-		UsuarioService usuarioService;
-
-		@PostConstruct
-		public void init(){
-			System.out.println("Creando los estudiantes de prueba");
-
-		}
 	}
 
 }

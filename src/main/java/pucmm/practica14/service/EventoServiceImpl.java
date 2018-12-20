@@ -2,8 +2,12 @@ package pucmm.practica14.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pucmm.practica14.model.Evento;
+import pucmm.practica14.model.Usuario;
 import pucmm.practica14.repository.EventoRepository;
 import pucmm.practica14.repository.UsuarioRepository;
 
@@ -18,6 +22,9 @@ public class EventoServiceImpl implements EventoService {
     @Autowired
     private EventoRepository eventoRepository;
 
+    @Autowired
+    public JavaMailSender emailSender;
+
     @Transactional
     public void crearEvento(Evento evento){
 
@@ -26,7 +33,7 @@ public class EventoServiceImpl implements EventoService {
 
 
     public void actualizarEvento(Evento evento){
-        crearEvento(evento);
+        eventoRepository.save(evento);
     }
     public void borrarEventoPorId(long id){
         eventoRepository.deleteById(id);
@@ -47,5 +54,23 @@ public class EventoServiceImpl implements EventoService {
         return eventoRepository.findAll();
     }
 
+
+    public void enviarCorreo(String para, String asunto, String texto){
+
+        SimpleMailMessage mensaje = new SimpleMailMessage();
+
+        mensaje.setTo(para);
+        mensaje.setSubject(asunto);
+        mensaje.setText(texto);
+        emailSender.send(mensaje);
+    }
+
+    public List<Evento> eventosPaginados(int offset, int limit){
+        return eventoRepository.eventosPaginados(offset, limit);
+    }
+
+    public long count(){
+        return eventoRepository.count();
+    }
 }
 

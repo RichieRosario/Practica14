@@ -46,6 +46,7 @@ dependencies {
 
     compile('org.vaadin.blackbluegl:calendar-component:2.0-BETA4')
     compile('org.vaadin.onur:calendar-component:1.0.0')
+    compile('org.vaadin.stefan:fullcalendar:1.7.1')
     compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.4.0')
     compile('org.springframework.boot:spring-boot-starter-mail:2.0.1.RELEASE')
     runtime('com.h2database:h2')

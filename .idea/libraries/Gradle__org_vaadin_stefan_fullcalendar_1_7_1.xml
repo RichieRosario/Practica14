@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.vaadin.stefan:fullcalendar:1.7.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.vaadin.stefan/fullcalendar/1.7.1/97df2eabb19843cb0d4e2dcd552c4b9a8ab8ff8a/fullcalendar-1.7.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.vaadin.stefan/fullcalendar/1.7.1/6c176ad5051387d7f49d80307f2c487a6025a30a/fullcalendar-1.7.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

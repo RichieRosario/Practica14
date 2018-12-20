@@ -46,7 +46,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     public void actualizarUsuario(Usuario usuario){
-        crearUsuario(usuario);
+        usuarioRepository.save(usuario);
     }
     public void borrarUsuarioPorId(long id){
         usuarioRepository.deleteById(id);
