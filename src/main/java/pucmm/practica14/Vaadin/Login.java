@@ -88,6 +88,8 @@ public class Login extends VerticalLayout {
                 Cookie c = new Cookie("user", username.getValue());
                 c.setMaxAge(12000);
                 c.setPath("/");
+                VaadinSession n = new VaadinSession(com.vaadin.server.VaadinService.getCurrent());
+                VaadinSession.setCurrent(n);
                 VaadinService.getCurrentResponse().addCookie(c);
 
 

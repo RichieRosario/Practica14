@@ -9,6 +9,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.vaadin.flow.spring.scopes.VaadinUIScope;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import org.springframework.beans.factory.annotation.Autowired;

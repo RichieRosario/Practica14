@@ -39,6 +39,7 @@ import java.util.*;
 import java.util.List;
 
 @Route("calendario")
+@UIScope
 public class Calendario extends VerticalLayout {
 
 
@@ -63,10 +64,11 @@ public class Calendario extends VerticalLayout {
     public Calendario(@Autowired EventoServiceImpl eventoService){
 
 
-
-        Calendario.eventoService = eventoService;
-
         crearRutas();
+
+        this.eventoService = eventoService;
+
+
 
         calendario.setDataProvider(new CustomDataProvider());
 
@@ -106,11 +108,6 @@ public class Calendario extends VerticalLayout {
 
         add(calendario);
 
-
-        calendario.addEventClickListener(e -> {
-
-            //////////
-        });
     }
 
 
@@ -121,15 +118,17 @@ public class Calendario extends VerticalLayout {
         //con RouterLink el renderizado no recarga la pagina.
         caja.add(new RouterLink("Calendario", Calendario.class));
         caja.add(new RouterLink("Eventos", EventoCrud.class));
+        Cookie c = getCookieByName("user");
 
-        if(getCookieByName("user").getValue().equals("admin")) {
-            caja.add(new RouterLink("Usuarios", UsuarioCrud.class));
-            caja.add(new RouterLink("Roles", RolCrud.class));
+            if (c.getValue().equals("admin")) {
+                caja.add(new RouterLink("Usuarios", UsuarioCrud.class));
+                caja.add(new RouterLink("Roles", RolCrud.class));
         }
 
+
+        caja.add(new Label("Bienvenido, "+getCookieByName("user").getValue()));
         caja.add(new RouterLink("Configuración", Configuracion.class));
         caja.add(new RouterLink("Cerrar sesión", Logout.class));
-        caja.add(new Label("Bienvenido, "+getCookieByName("user").getValue()));
 
         add(caja);
     }
@@ -151,7 +150,8 @@ public class Calendario extends VerticalLayout {
 
 }
 
-@SpringComponent
+
+
 @UIScope
  class CustomDataProvider extends AbstractCalendarDataProvider<Evento> {
     @Override

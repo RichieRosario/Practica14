@@ -31,7 +31,6 @@ import pucmm.practica14.service.UsuarioServiceImpl;
 import javax.servlet.http.Cookie;
 
 @Route("configuracion")
-@Component
 @UIScope
 public class Configuracion extends VerticalLayout  {
 
