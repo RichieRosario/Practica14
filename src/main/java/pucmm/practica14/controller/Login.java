@@ -25,7 +25,7 @@ public class Login extends VerticalLayout {
     UsuarioServiceImpl usuarioService;
 
 
-    public Login() {
+    public Login(@Autowired   UsuarioServiceImpl usuarioService) {
         // two components:
         TextField username = new TextField("Username");
         TextField password = new TextField("Password");
