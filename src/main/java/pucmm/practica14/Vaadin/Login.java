@@ -23,6 +23,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.FormLayout;
 
+import com.vaadin.ui.LoginForm;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,6 +43,8 @@ public class Login extends VerticalLayout {
 
     UsuarioServiceImpl usuarioService;
     RolServiceImpl rolService;
+    LoginForm.LoginListener loginListener;
+    public static VaadinSession session =  new VaadinSession(com.vaadin.server.VaadinService.getCurrent());;
 
 
 
@@ -77,10 +80,10 @@ public class Login extends VerticalLayout {
 
         setAlignItems(Alignment.CENTER);
         setAlignSelf(Alignment.CENTER);
-
-        if(getCookieByName("user")!=null){
-            login.setEnabled(false);
-        }
+//
+//        if(VaadinSession.getCurrent().getAttribute("user") !=null){
+//            login.setEnabled(false);
+//        }
         // add logic through event listeners
         login.addClickListener(event ->{
 
@@ -88,10 +91,10 @@ public class Login extends VerticalLayout {
                 Cookie c = new Cookie("user", username.getValue());
                 c.setMaxAge(12000);
                 c.setPath("/");
-                VaadinSession n = new VaadinSession(com.vaadin.server.VaadinService.getCurrent());
-                VaadinSession.setCurrent(n);
-                VaadinService.getCurrentResponse().addCookie(c);
 
+                session.setAttribute("user", username.getValue());
+
+                VaadinService.getCurrentResponse().addCookie(c);
 
                UI.getCurrent().navigate("calendario");
             }

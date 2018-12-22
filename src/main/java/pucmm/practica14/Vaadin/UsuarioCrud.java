@@ -127,7 +127,7 @@ public class UsuarioCrud extends VerticalLayout {
         tfNombre=new TextField("Nombre");
         tfEmail=new TextField("Correo");
         cbRoles = new ComboBox("Rol");
-       // tfPassword = new PasswordField();
+       tfPassword = new TextField("Contraseña");
 
         List<Rol> roles = rolService.buscarTodosRoles();
         List<String> nombresRol = new ArrayList<>();
@@ -165,6 +165,8 @@ public class UsuarioCrud extends VerticalLayout {
             usuarioSeleccionado.setUsername(tfUserName.getValue());
             usuarioSeleccionado.setEmail(tfEmail.getValue());
             usuarioSeleccionado.setNombre(tfNombre.getValue());
+
+            usuarioSeleccionado.setPassword(tfPassword.getValue());
             usuarioSeleccionado.setRol(rolService.findByNombreRol(cbRoles.getValue()));
             usuarioService.actualizarUsuario(usuarioSeleccionado);
             dataProvider.refreshAll();
@@ -185,6 +187,11 @@ public class UsuarioCrud extends VerticalLayout {
         binder.forField(tfNombre).asRequired("Debe indicar un nombre")
                 .bind(Usuario::getNombre, Usuario::setNombre);
 
+
+        binder.forField(tfPassword).asRequired("Debe indicar una clave")
+                .bind(Usuario::getPassword, Usuario::setPassword);
+
+
         binder.forField(tfEmail).asRequired("Debe indicar un correo")
                 .bind(Usuario::getEmail, Usuario::setEmail);
 
@@ -195,6 +202,7 @@ public class UsuarioCrud extends VerticalLayout {
         fl.add(tfUserName);
         fl.add(tfNombre);
         fl.add(tfEmail);
+        fl.add(tfPassword);
         fl.add(cbRoles);
         HorizontalLayout accionesForm = new HorizontalLayout(btnAgregar,btnEditar, btnEliminar);
         VerticalLayout vfl = new VerticalLayout(fl, accionesForm);
@@ -223,16 +231,18 @@ public class UsuarioCrud extends VerticalLayout {
         //con RouterLink el renderizado no recarga la pagina.
         caja.add(new RouterLink("Calendario", Calendario.class));
         caja.add(new RouterLink("Eventos", EventoCrud.class));
+        String c = (String)Login.session.getAttribute("user");
 
-        if(getCookieByName("user").getValue().equals("admin")) {
+
+        if (c.equals("admin")) {
             caja.add(new RouterLink("Usuarios", UsuarioCrud.class));
             caja.add(new RouterLink("Roles", RolCrud.class));
         }
 
+
+        caja.add(new Label("Bienvenido, "+c));
         caja.add(new RouterLink("Configuración", Configuracion.class));
         caja.add(new RouterLink("Cerrar sesión", Logout.class));
-
-        caja.add(new Label("Bienvenido, "+getCookieByName("user").getValue()));
 
         add(caja);
     }

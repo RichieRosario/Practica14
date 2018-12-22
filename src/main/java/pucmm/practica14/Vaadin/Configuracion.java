@@ -20,6 +20,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.vaadin.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pucmm.practica14.model.Rol;
@@ -110,24 +111,29 @@ public class Configuracion extends VerticalLayout  {
 
 
 
+
     private void crearRutas(){
         HorizontalLayout caja = new HorizontalLayout();
         //con RouterLink el renderizado no recarga la pagina.
         caja.add(new RouterLink("Calendario", Calendario.class));
         caja.add(new RouterLink("Eventos", EventoCrud.class));
+        String c = (String)Login.session.getAttribute("user");
 
-        if(getCookieByName("user").getValue().equals("admin")) {
+
+        if (c.equals("admin")) {
             caja.add(new RouterLink("Usuarios", UsuarioCrud.class));
             caja.add(new RouterLink("Roles", RolCrud.class));
         }
 
+
+        caja.add(new Label("Bienvenido, "+c));
         caja.add(new RouterLink("Configuración", Configuracion.class));
         caja.add(new RouterLink("Cerrar sesión", Logout.class));
 
-        caja.add(new Label("Bienvenido, "+getCookieByName("user").getValue()));
-
         add(caja);
     }
+
+
 
 
     private Cookie getCookieByName(String name) {

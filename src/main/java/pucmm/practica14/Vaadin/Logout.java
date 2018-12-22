@@ -45,7 +45,7 @@ public class Logout extends VerticalLayout {
             c.setMaxAge(0);
             c.setPath("/");
             VaadinService.getCurrentResponse().addCookie(c);
-            VaadinSession.getCurrent().close();
+            Login.session.close();
             getUI().get().navigate("login");
 
         });
